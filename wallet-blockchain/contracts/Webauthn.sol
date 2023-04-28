@@ -3,19 +3,16 @@ pragma solidity ^0.8.17;
 
 // External Deps
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./EllipticCurve.sol";
 
 // Internal Deps
 import "./utils/Errors.sol";
-import "./EllipticCurve.sol";
+import {FCL_Elliptic_ZZ} from "./EllipticCurve.sol";
 import "./Base64.sol";
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
 contract Webauthn is Ownable {
-    using FCL_Elliptic_ZZ for bytes32;
-
     function isValidSignature(
         bytes calldata transaction,
         bytes memory _signature
@@ -115,7 +112,7 @@ contract Webauthn is Ownable {
         bytes32 message = sha256(verifyData);
 
         require(
-            message.ecdsa_verify(rs, coordinates),
+            FCL_Elliptic_ZZ.ecdsa_verify(message, rs, coordinates),
             Errors.INVALID_SIGNATURE
         );
 
