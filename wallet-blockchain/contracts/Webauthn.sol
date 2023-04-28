@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 // External Deps
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./EllipticCurve.sol";
 
 // Internal Deps
 import "./utils/Errors.sol";
@@ -12,11 +13,13 @@ import "./Base64.sol";
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-contract Webauthn is Ownable, EllipticCurve {
+contract Webauthn is Ownable {
+    using FCL_Elliptic_ZZ for bytes32;
+
     function isValidSignature(
         bytes calldata transaction,
         bytes memory _signature
-    ) public view returns (bool) {
+    ) public returns (bool) {
         (
             bytes memory authenticatorData,
             bytes1 authenticatorDataFlagMask,
@@ -62,9 +65,9 @@ contract Webauthn is Ownable, EllipticCurve {
         bytes memory clientData,
         string memory clientChallenge,
         uint clientChallengeDataOffset,
-        uint[2] memory rs,
-        uint[2] memory coordinates
-    ) public pure returns (bool) {
+        uint[2] calldata rs,
+        uint[2] calldata coordinates
+    ) public returns (bool) {
         if (
             (authenticatorData[32] & authenticatorDataFlagMask) !=
             authenticatorDataFlagMask
@@ -112,7 +115,7 @@ contract Webauthn is Ownable, EllipticCurve {
         bytes32 message = sha256(verifyData);
 
         require(
-            validateSignature(message, rs, coordinates),
+            message.ecdsa_verify(rs, coordinates),
             Errors.INVALID_SIGNATURE
         );
 
