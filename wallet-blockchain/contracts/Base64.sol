@@ -13,7 +13,7 @@ library Base64 {
     /// @notice Encodes some bytes to the base64 representation
     function encode(bytes memory data) internal pure returns (string memory) {
         // Set length to format 32 byte hash without padding
-        uint256 encodedLen = 43;
+        uint256 encodedLen = 44;
 
         // Add some extra buffer at the end
         bytes memory result = new bytes(encodedLen + 32);

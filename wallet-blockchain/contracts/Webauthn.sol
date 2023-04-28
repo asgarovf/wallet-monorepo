@@ -27,18 +27,20 @@ contract Webauthn is Ownable, EllipticCurve {
             uint[2] memory coordinates
         ) = this._decodeSignature(_signature);
 
-        // return [
-        //     abi.encodePacked(Base64.encode(transaction)),
-        //     bytes(clientChallenge)
-        // ];
+        bytes memory hashedTransaction = abi.encodePacked(
+            keccak256(transaction)
+        );
 
-        bytes memory encoded = bytes(Base64.encode(transaction));
-
-        bytes memory formatted = new bytes(bytes(clientChallenge).length);
-        copyBytes(encoded, 0, bytes(clientChallenge).length, formatted, 0);
+        // return (
+        //     bytes(Base64.encode(hashedTransaction)),
+        //     bytes(clientChallenge),
+        //     bytes(Base64.encode(hashedTransaction)).length,
+        //     bytes(clientChallenge).length
+        // );
 
         require(
-            keccak256(formatted) == keccak256(bytes(clientChallenge)),
+            keccak256(bytes(Base64.encode(hashedTransaction))) ==
+                keccak256(bytes(clientChallenge)),
             Errors.INVALID_CHALLENGE
         );
 

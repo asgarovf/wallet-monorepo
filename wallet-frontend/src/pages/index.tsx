@@ -11,22 +11,17 @@ import { ethers } from "ethers";
 import Head from "next/head";
 import { useState } from "react";
 
-const challenge = "0x94E9b636d0f3BDc08019B450F7f2F4Ef5b4eb2Ca";
+const challenge = "0x" + "AA".repeat(200000);
+
 const base64toBase64Url = (txt: string) => {
   return txt.replaceAll("+", "-").replaceAll("/", "_");
 };
 
 const encodeChallenge = (challenge: string) => {
-  const sliced = challenge.slice(2);
+  const sliced = ethers.utils.keccak256(challenge).slice(2);
   const split = base64toBase64Url(
     Buffer.from(sliced, "hex").toString("base64")
   ).replaceAll("=", "A");
-  // let joined = "";
-  // split.forEach((item) => {
-  //   if (item != "=") {
-  //     joined += item;
-  //   }
-  // });
   return split;
 };
 
