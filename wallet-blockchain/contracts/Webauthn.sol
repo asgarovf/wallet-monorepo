@@ -8,11 +8,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./utils/Errors.sol";
 import "./EllipticCurve.sol";
 import "./Base64.sol";
-import "./Strings.sol";
-import "./BytesLib.sol";
 
 // Uncomment this line to use console.log
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract Webauthn is Ownable, EllipticCurve {
     function isValidSignature(
